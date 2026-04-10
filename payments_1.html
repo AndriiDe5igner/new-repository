@@ -1,0 +1,731 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>MilX — Payments</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Mulish:wght@400;600;700;800;900;1000&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Inter',sans-serif;background:#fff;color:#32353D;min-height:100vh;-webkit-font-smoothing:antialiased;}
+
+/* ── TOKENS ── */
+:root{
+  --black-600:#141414;
+  --black-500:#32353D;
+  --black-400:#71778A;
+  --black-300:#979EB8;
+  --black-200:#CFD4E5;
+  --black-100:#E1E5F0;
+  --black-90:#EBEDF5;
+  --black-80:#F0F2F8;
+  --black-60:#F3F3F7;
+  --black-50:#F5F6FA;
+  --black-30:#FCFCFD;
+  --black-0:#FFFFFF;
+  --green-100:#03AD47;
+  --red-375:#FF463B;
+  --r-xl:24px;
+  --r-lg:16px;
+  --r-md:12px;
+  --r-huge:32px;
+}
+
+/* ── HEADER ── */
+.header{
+  position:fixed;top:0;left:0;right:0;z-index:100;
+  height:70px;background:#fff;
+  border-bottom:1px solid var(--black-90);
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 24px;
+}
+.header-logo{
+  display:flex;align-items:center;gap:24px;
+  background:#fff;border:1px solid var(--black-100);
+  border-radius:12px;padding:12px 16px;width:240px;
+}
+.header-logo img.milx-logo{height:22px;}
+.header-logo-arrow{width:24px;height:18px;opacity:.5;}
+
+.header-right{display:flex;align-items:center;gap:16px;}
+.header-icons{display:flex;gap:0;padding-right:24px;border-right:1px solid transparent;}
+.icon-btn{padding:10px;border-radius:70px;cursor:pointer;display:flex;align-items:center;justify-content:center;}
+.icon-btn svg{width:20px;height:20px;color:var(--black-500);}
+.wallet-widget{
+  background:var(--black-30);border:1px solid var(--black-90);
+  border-radius:var(--r-md);padding:10px 16px 6px;
+  display:flex;flex-direction:column;
+}
+.wallet-label{font-size:10px;font-weight:600;color:var(--black-400);text-transform:uppercase;letter-spacing:.8px;line-height:1;}
+.wallet-amount{font-size:14px;font-weight:600;color:var(--black-500);line-height:24px;}
+.avatar{width:40px;height:40px;border-radius:50%;overflow:hidden;flex-shrink:0;}
+.avatar img{width:100%;height:100%;object-fit:cover;}
+
+/* ── LAYOUT ── */
+.layout{display:flex;margin-top:70px;min-height:calc(100vh - 70px);}
+
+/* ── SIDEBAR MENU ── */
+.sidebar{
+  position:fixed;top:70px;left:0;bottom:0;
+  width:264px;padding:24px;
+  display:flex;flex-direction:column;justify-content:space-between;
+  overflow-y:auto;
+}
+.menu-box{
+  background:#fff;border:1px solid var(--black-90);
+  border-radius:var(--r-xl);padding:8px;
+  display:flex;flex-direction:column;justify-content:space-between;
+  height:698px;
+}
+.menu-list{display:flex;flex-direction:column;gap:8px;}
+.menu-item{
+  display:flex;align-items:center;gap:12px;
+  padding:12px 16px;border-radius:var(--r-lg);
+  font-size:12px;font-weight:500;color:var(--black-500);
+  cursor:pointer;transition:background .15s;
+  background:#fff;
+}
+.menu-item:hover{background:var(--black-60);}
+.menu-item.active{background:var(--black-60);}
+.menu-item svg,.menu-item img{width:18px;height:18px;flex-shrink:0;}
+
+.menu-bottom{display:flex;flex-direction:column;gap:8px;}
+.donate-banner{
+  padding:24px 16px 16px;display:flex;flex-direction:column;gap:16px;
+}
+.donate-header{display:flex;gap:12px;align-items:flex-start;}
+.donate-emblem{width:32px;height:32px;flex-shrink:0;}
+.donate-title{font-size:12px;font-weight:600;color:var(--black-500);line-height:16px;}
+.donate-desc{font-size:10px;color:var(--black-400);line-height:14px;}
+.donate-btn{
+  display:inline-flex;align-items:center;justify-content:center;
+  border:1px solid var(--black-100);border-radius:50px;
+  padding:8px 16px;cursor:pointer;
+  font-family:'Gilroy',sans-serif;font-size:11px;font-weight:700;
+  color:var(--black-500);letter-spacing:.44px;text-transform:uppercase;
+  background:#fff;
+}
+.menu-version{
+  display:flex;justify-content:space-between;align-items:center;
+  padding:12px 16px;font-size:12px;
+}
+.menu-version span:first-child{color:var(--black-400);}
+.menu-version span:last-child{color:var(--black-500);}
+
+/* ── MAIN CONTENT ── */
+.main{margin-left:264px;flex:1;padding:24px 24px 24px 0;min-width:0;}
+.page-title{
+  font-family:'Mulish',sans-serif;font-weight:1000;font-size:24px;
+  color:var(--black-500);letter-spacing:.24px;text-transform:uppercase;
+  line-height:32px;margin-bottom:16px;
+  padding-left:24px;
+}
+
+/* ── PAYMENTS PANEL ── */
+.payments-panel{
+  background:var(--black-60);
+  border-radius:var(--r-xl);
+  display:flex;gap:16px;
+  padding:8px 16px 8px 8px;
+  height:646px;
+}
+
+/* ── PAYEE LIST ── */
+.payee-list{
+  background:#fff;border-radius:var(--r-lg);
+  width:340px;flex-shrink:0;
+  display:flex;flex-direction:column;
+  padding-top:12px;
+  overflow:hidden;
+}
+.payee-list-scroll{
+  flex:1;display:flex;gap:4px;
+  padding:0 4px 0 12px;
+  min-height:0;overflow:hidden;
+}
+.payee-items{
+  flex:1;display:flex;flex-direction:column;gap:6px;
+  overflow-y:auto;padding-right:4px;
+}
+.payee-items::-webkit-scrollbar{width:0;}
+
+/* Dropdown "All payments" */
+.payee-dropdown{
+  background:var(--black-50);border-radius:var(--r-md);
+  height:72px;display:flex;align-items:center;gap:16px;
+  padding-left:16px;flex-shrink:0;overflow:hidden;
+}
+.payee-dropdown-icon{
+  width:40px;height:40px;flex-shrink:0;
+  background:var(--black-50);border-radius:8px;
+  display:flex;align-items:center;justify-content:center;
+  overflow:hidden;
+}
+.payee-dropdown-icon img{width:40px;height:40px;object-fit:contain;}
+.payee-dropdown-text{flex:1;font-size:14px;font-weight:500;color:var(--black-500);}
+.payee-dropdown-btn{
+  width:55px;height:72px;display:flex;flex-direction:column;
+  align-items:center;justify-content:center;gap:12px;
+  border-radius:0 12px 12px 0;cursor:pointer;
+  flex-shrink:0;
+}
+.payee-dropdown-btn span{display:block;width:7px;height:3px;border-radius:2px;background:var(--black-400);}
+
+/* Payee card */
+.payee-card{
+  background:#fff;border:1px solid var(--black-90);
+  border-radius:var(--r-md);
+  display:flex;align-items:center;gap:16px;
+  padding:16px;flex-shrink:0;width:100%;
+  cursor:pointer;transition:background .15s;
+  position:relative;
+}
+.payee-card:hover{background:var(--black-60);}
+.payee-card-icon{width:40px;height:40px;flex-shrink:0;border-radius:8px;overflow:hidden;}
+.payee-card-icon img{width:40px;height:40px;object-fit:contain;}
+.payee-card-info{flex:1;min-width:0;}
+.payee-card-name{
+  font-size:14px;font-weight:500;color:var(--black-500);
+  line-height:24px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+}
+.payee-card-sub{
+  font-size:12px;color:var(--black-400);line-height:16px;
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+}
+.payee-card.invalid .payee-card-name,.payee-card.invalid .payee-card-sub{color:var(--black-300);}
+.payee-card.invalid .payee-card-icon{opacity:.5;}
+.payee-card-name-row{display:flex;align-items:center;gap:4px;}
+.payee-card-not-valid{font-size:14px;color:var(--black-300);}
+.warning-badge{
+  position:absolute;bottom:-6px;left:41px;
+  background:#fff;border-radius:21px;padding:2px;
+  display:flex;align-items:center;
+}
+.warning-badge img{width:14px;height:14px;}
+
+/* Scrollbar in payee list */
+.payee-scroll-track{
+  width:4px;background:var(--black-90);
+  border-radius:40px;height:110px;flex-shrink:0;margin-top:6px;
+}
+
+.payee-divider{height:1px;background:var(--black-80);flex-shrink:0;}
+.add-payee-btn-wrap{padding:12px;}
+.add-payee-btn{
+  width:100%;border:1px solid var(--black-200);
+  border-radius:var(--r-huge);padding:10px 20px;
+  display:flex;align-items:center;justify-content:center;
+  cursor:pointer;background:#fff;transition:background .15s;
+}
+.add-payee-btn:hover{background:var(--black-60);}
+.add-payee-btn span{
+  font-size:12px;font-weight:700;color:var(--black-500);
+  text-transform:uppercase;letter-spacing:.48px;
+  font-family:'Inter',sans-serif;
+}
+
+/* ── PAYMENTS RIGHT ── */
+.payments-right{
+  flex:1;display:flex;flex-direction:column;gap:6px;
+  padding-top:12px;min-width:0;
+}
+
+/* Tabs & controls */
+.tabs-controls{
+  display:flex;align-items:center;justify-content:space-between;
+  flex-shrink:0;
+}
+.tabs{display:flex;gap:8px;}
+.tab{
+  padding:8px 16px;border-radius:var(--r-lg);
+  font-size:14px;font-weight:500;color:var(--black-500);
+  cursor:pointer;border:1px solid var(--black-200);
+  line-height:24px;white-space:nowrap;transition:border-color .15s;
+}
+.tab.active{border:2px solid var(--black-500);}
+.controls{display:flex;gap:8px;align-items:center;}
+.search-input{
+  display:flex;align-items:center;gap:16px;
+  border:1px solid var(--black-200);border-radius:var(--r-lg);
+  padding:8px 12px 8px 16px;width:170px;
+}
+.search-input svg{width:16px;height:16px;color:var(--black-400);flex-shrink:0;}
+.search-input input{
+  border:none;outline:none;background:transparent;
+  font-size:14px;font-weight:500;color:var(--black-400);
+  flex:1;font-family:'Inter',sans-serif;
+}
+.ctrl-btn{
+  width:40px;height:40px;border:1px solid var(--black-200);
+  border-radius:var(--r-huge);display:flex;align-items:center;justify-content:center;
+  cursor:pointer;background:#fff;transition:background .15s;flex-shrink:0;
+}
+.ctrl-btn:hover{background:var(--black-60);}
+.ctrl-btn svg{width:16px;height:16px;color:var(--black-500);}
+
+/* Transactions list */
+.tx-list{
+  flex:1;display:flex;flex-direction:column;gap:6px;
+  overflow-y:auto;border-radius:0 0 var(--r-lg) var(--r-lg);
+  min-height:0;
+}
+.tx-list::-webkit-scrollbar{width:4px;}
+.tx-list::-webkit-scrollbar-track{background:transparent;}
+.tx-list::-webkit-scrollbar-thumb{background:var(--black-200);border-radius:40px;}
+
+.tx-date{
+  padding:8px 0 2px 16px;
+  font-size:10px;color:var(--black-400);
+  text-transform:uppercase;line-height:16px;flex-shrink:0;
+}
+.tx-row{
+  background:var(--black-30);border:1px solid #fff;
+  border-radius:var(--r-lg);
+  display:flex;align-items:flex-start;gap:24px;
+  padding:12px 16px;height:64px;flex-shrink:0;
+  cursor:pointer;transition:background .15s;
+}
+.tx-row:hover{background:var(--black-60);}
+
+.tx-who{display:flex;gap:12px;align-items:flex-start;width:190px;flex-shrink:0;}
+.tx-icon{
+  width:20px;height:20px;border-radius:4px;
+  overflow:hidden;flex-shrink:0;margin-top:2px;
+}
+.tx-icon img{width:20px;height:20px;object-fit:contain;}
+.tx-info{display:flex;flex-direction:column;}
+.tx-name{
+  font-size:14px;font-weight:500;color:var(--black-500);
+  line-height:24px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+  max-width:160px;
+}
+.tx-time{font-size:10px;color:var(--black-400);line-height:16px;}
+
+.tx-amount{
+  flex:0 0 100px;max-width:100px;
+  display:flex;align-items:center;justify-content:flex-end;
+}
+.tx-amount span{font-size:14px;font-weight:500;line-height:24px;white-space:nowrap;}
+.tx-amount.positive span{color:var(--green-100);}
+.tx-amount.negative span{color:var(--black-500);}
+.tx-amount.failed{display:flex;gap:6px;align-items:center;}
+.tx-amount.failed span{color:var(--red-375);}
+.tx-amount.failed svg{width:14px;height:14px;flex-shrink:0;}
+
+.tx-desc{
+  flex:1;display:flex;flex-direction:column;justify-content:center;
+  min-width:0;padding:5px 0;
+}
+.tx-desc p{
+  font-size:12px;color:var(--black-400);line-height:16px;
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+}
+
+/* scrollbar right side */
+.payments-scrollbar{
+  position:absolute;right:6px;top:76px;
+  width:4px;height:110px;background:var(--black-200);
+  border-radius:40px;
+}
+</style>
+</head>
+<body>
+
+<!-- ── HEADER ── -->
+<header class="header">
+  <div class="header-logo">
+    <!-- MilX logo text -->
+    <svg width="94" height="22" viewBox="0 0 94 22" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <text y="18" font-family="'Mulish',sans-serif" font-weight="900" font-size="20" fill="#32353D">MilX</text>
+    </svg>
+    <svg width="24" height="18" viewBox="0 0 24 18" fill="none">
+      <rect x="2" y="2" width="20" height="14" rx="2" stroke="#CFD4E5" stroke-width="1.5"/>
+      <line x1="6" y1="9" x2="18" y2="9" stroke="#CFD4E5" stroke-width="1.5"/>
+    </svg>
+  </div>
+  <div class="header-right">
+    <div class="header-icons" style="display:flex;gap:4px;">
+      <!-- Bell -->
+      <div class="icon-btn">
+        <svg viewBox="0 0 20 20" fill="none" stroke="#32353D" stroke-width="1.5">
+          <path d="M10 2a6 6 0 0 0-6 6v3l-1.5 2.5h15L16 11V8a6 6 0 0 0-6-6Z" stroke-linecap="round"/>
+          <path d="M8.5 16.5a1.5 1.5 0 0 0 3 0" stroke-linecap="round"/>
+        </svg>
+      </div>
+      <!-- Chat -->
+      <div class="icon-btn">
+        <svg viewBox="0 0 20 20" fill="none" stroke="#32353D" stroke-width="1.5">
+          <path d="M3 4h14a1 1 0 0 1 1 1v8a1 1 0 0 1-1 1H6l-4 3V5a1 1 0 0 1 1-1Z" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+      </div>
+    </div>
+    <div class="wallet-widget">
+      <span class="wallet-label">My wallet</span>
+      <span class="wallet-amount">$36,819.12</span>
+    </div>
+    <div class="avatar">
+      <img src="https://www.figma.com/api/mcp/asset/aa48eebc-2839-49c6-bb58-4ad421a4a7be" alt="avatar" onerror="this.style.background='#E1E5F0';this.src='';"/>
+    </div>
+  </div>
+</header>
+
+<!-- ── LAYOUT ── -->
+<div class="layout">
+
+  <!-- ── SIDEBAR ── -->
+  <aside class="sidebar">
+    <div class="menu-box">
+      <nav class="menu-list">
+        <!-- Home -->
+        <div class="menu-item">
+          <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+            <path d="M2 7.5L9 2l7 5.5V16a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V7.5Z" stroke="#32353D" stroke-width="1.4" fill="none"/>
+            <path d="M7 17v-6h4v6" stroke="#32353D" stroke-width="1.4"/>
+          </svg>
+          Home
+        </div>
+        <!-- Active Funds -->
+        <div class="menu-item">
+          <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+            <rect x="2" y="2" width="14" height="14" rx="3" stroke="#32353D" stroke-width="1.4"/>
+            <path d="M6 11V7m3 4V5m3 6V9" stroke="#32353D" stroke-width="1.4" stroke-linecap="round"/>
+          </svg>
+          Active Funds
+        </div>
+        <!-- Advanced Funds -->
+        <div class="menu-item">
+          <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+            <rect x="2" y="2" width="14" height="14" rx="3" fill="#32353D"/>
+            <path d="M6 6h3m-3 3h6m-6 3h4" stroke="white" stroke-width="1.2" stroke-linecap="round"/>
+          </svg>
+          Advanced Funds
+        </div>
+        <!-- Payments (active) -->
+        <div class="menu-item active">
+          <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+            <rect x="2" y="2" width="14" height="14" rx="3" fill="#32353D"/>
+            <path d="M6 7l2 2 4-4" stroke="white" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M6 12h6" stroke="white" stroke-width="1.4" stroke-linecap="round"/>
+          </svg>
+          Payments
+        </div>
+      </nav>
+
+      <div class="menu-bottom">
+        <div class="donate-banner">
+          <div class="donate-header">
+            <div class="donate-emblem">
+              <img src="https://www.figma.com/api/mcp/asset/d0bd1938-bab5-468b-8be4-845cb107ea6a" alt="emblem" width="32" height="32" onerror="this.style.display='none'"/>
+            </div>
+            <div class="donate-title">Stop the WAR!<br/>Support Ukraine️ 🇺🇦</div>
+          </div>
+          <p class="donate-desc">You can send funds for humanitarian aid to Ukrainians who have suffered from the war</p>
+          <button class="donate-btn">DONATE</button>
+        </div>
+        <div class="menu-version">
+          <span>Version 1.6.12</span>
+          <span>English</span>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- ── MAIN ── -->
+  <main class="main">
+    <h1 class="page-title">Payments</h1>
+
+    <div class="payments-panel" style="position:relative;">
+
+      <!-- ── PAYEE LIST ── -->
+      <div class="payee-list">
+        <div class="payee-list-scroll">
+          <div class="payee-items">
+
+            <!-- Dropdown All -->
+            <div class="payee-dropdown">
+              <div class="payee-dropdown-icon">
+                <img src="https://www.figma.com/api/mcp/asset/2747453a-9e1c-4674-9a5e-10ec43c13eed" alt="all" onerror="this.style.display='none'"/>
+              </div>
+              <span class="payee-dropdown-text">All payments</span>
+              <div class="payee-dropdown-btn">
+                <span></span><span></span>
+              </div>
+            </div>
+
+            <!-- James Mitchell / PayPal -->
+            <div class="payee-card">
+              <div class="payee-card-icon">
+                <img src="https://www.figma.com/api/mcp/asset/6b29c9c6-2d2f-42c3-b46b-c14f39176b7f" alt="paypal" onerror="this.style.background='#E1E5F0'"/>
+              </div>
+              <div class="payee-card-info">
+                <div class="payee-card-name">James Mitchell</div>
+                <div class="payee-card-sub">podo****@air.io</div>
+              </div>
+            </div>
+
+            <!-- YouTube Reports -->
+            <div class="payee-card">
+              <div class="payee-card-icon">
+                <img src="https://www.figma.com/api/mcp/asset/16d44cc1-a6df-4534-a715-51a03d12d865" alt="youtube" onerror="this.style.background='#E1E5F0'"/>
+              </div>
+              <div class="payee-card-info">
+                <div class="payee-card-name">YouTube Reports</div>
+                <div class="payee-card-sub">Beaver VLOG, Beaver games, Fox_foxy_splash</div>
+              </div>
+            </div>
+
+            <!-- Sophia Richardson / Mastercard -->
+            <div class="payee-card">
+              <div class="payee-card-icon">
+                <img src="https://www.figma.com/api/mcp/asset/7b13e13f-73c8-4210-83b8-118e85f16a64" alt="mastercard" onerror="this.style.background='#E1E5F0'"/>
+              </div>
+              <div class="payee-card-info">
+                <div class="payee-card-name">Sophia Richardson</div>
+                <div class="payee-card-sub">2983****1663</div>
+              </div>
+            </div>
+
+            <!-- Emily Carter / P2P (warning) -->
+            <div class="payee-card" style="position:relative;">
+              <div class="payee-card-icon">
+                <img src="https://www.figma.com/api/mcp/asset/7b13e13f-73c8-4210-83b8-118e85f16a64" alt="p2p" onerror="this.style.background='#E1E5F0'"/>
+              </div>
+              <div class="payee-card-info">
+                <div class="payee-card-name">Emily Carter</div>
+                <div class="payee-card-sub">MilX P2P</div>
+              </div>
+              <div class="warning-badge">
+                <img src="https://www.figma.com/api/mcp/asset/7d49cb78-d469-42ef-b677-f1d50af7ef26" alt="warning" onerror="this.innerHTML='⚠️';this.style.fontSize='10px'"/>
+              </div>
+            </div>
+
+            <!-- Konstantin / Visa -->
+            <div class="payee-card">
+              <div class="payee-card-icon">
+                <img src="https://www.figma.com/api/mcp/asset/cc11373c-be46-4400-b310-7030d7fb7bb1" alt="visa" onerror="this.style.background='#E1E5F0'"/>
+              </div>
+              <div class="payee-card-info">
+                <div class="payee-card-name">Konstantin Konstantinopolskivskiy</div>
+                <div class="payee-card-sub">9934****0041</div>
+              </div>
+            </div>
+
+            <!-- Olivia Bennett (invalid) -->
+            <div class="payee-card invalid">
+              <div class="payee-card-icon">
+                <img src="https://www.figma.com/api/mcp/asset/6b29c9c6-2d2f-42c3-b46b-c14f39176b7f" alt="paypal" onerror="this.style.background='#E1E5F0'"/>
+              </div>
+              <div class="payee-card-info">
+                <div class="payee-card-name-row">
+                  <span class="payee-card-name" style="color:var(--black-300)">Olivia Bennett</span>
+                  <span class="payee-card-not-valid">(Not valid)</span>
+                </div>
+                <div class="payee-card-sub">1992olivia****@gmail.com</div>
+              </div>
+            </div>
+
+            <!-- Display name -->
+            <div class="payee-card">
+              <div class="payee-card-icon">
+                <img src="https://www.figma.com/api/mcp/asset/6b29c9c6-2d2f-42c3-b46b-c14f39176b7f" alt="paypal" onerror="this.style.background='#E1E5F0'"/>
+              </div>
+              <div class="payee-card-info">
+                <div class="payee-card-name">Display name</div>
+                <div class="payee-card-sub">Number</div>
+              </div>
+            </div>
+
+          </div>
+          <div class="payee-scroll-track"></div>
+        </div>
+
+        <div class="payee-divider"></div>
+        <div class="add-payee-btn-wrap">
+          <button class="add-payee-btn">
+            <span>Add new payee</span>
+          </button>
+        </div>
+      </div>
+
+      <!-- ── TRANSACTIONS RIGHT ── -->
+      <div class="payments-right">
+
+        <!-- Tabs & Controls -->
+        <div class="tabs-controls">
+          <div class="tabs">
+            <div class="tab active">Payments history</div>
+            <div class="tab">Recurring payments</div>
+          </div>
+          <div class="controls">
+            <div class="search-input">
+              <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
+                <circle cx="7" cy="7" r="4.5"/>
+                <path d="M11 11l2.5 2.5" stroke-linecap="round"/>
+              </svg>
+              <input type="text" placeholder="Search"/>
+            </div>
+            <!-- Filter -->
+            <div class="ctrl-btn">
+              <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
+                <path d="M2 4h12M4 8h8M6 12h4" stroke-linecap="round"/>
+              </svg>
+            </div>
+            <!-- Download -->
+            <div class="ctrl-btn">
+              <svg viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="1.5">
+                <path d="M8 2v8m-3-3 3 3 3-3" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M3 13h10" stroke-linecap="round"/>
+              </svg>
+            </div>
+          </div>
+        </div>
+
+        <!-- Transactions -->
+        <div class="tx-list">
+
+          <div class="tx-date">today</div>
+
+          <!-- Bank transfer +$1,000 -->
+          <div class="tx-row">
+            <div class="tx-who">
+              <div class="tx-icon">
+                <img src="https://www.figma.com/api/mcp/asset/8e3787f2-9ef5-4145-849c-71a6b1e65c5a" alt="swift" onerror="this.style.background='#E1E5F0'"/>
+              </div>
+              <div class="tx-info">
+                <div class="tx-name">Bank transfer</div>
+                <div class="tx-time">1:45 PM</div>
+              </div>
+            </div>
+            <div class="tx-amount positive"><span>+$1,000.00</span></div>
+            <div class="tx-desc"><p>Payment for partnership from Ronald Timma</p></div>
+          </div>
+
+          <!-- YouTube Reports +$32,115 -->
+          <div class="tx-row">
+            <div class="tx-who">
+              <div class="tx-icon">
+                <img src="https://www.figma.com/api/mcp/asset/6306bf70-6b8d-41c4-bea2-dd3db3b3f662" alt="youtube" onerror="this.style.background='#E1E5F0'"/>
+              </div>
+              <div class="tx-info">
+                <div class="tx-name">YouTube Reports</div>
+                <div class="tx-time">2:30 PM</div>
+              </div>
+            </div>
+            <div class="tx-amount positive"><span>+$32,115.00</span></div>
+            <div class="tx-desc"><p>YouTube revenues for July 2025</p></div>
+          </div>
+
+          <div class="tx-date">yesterday</div>
+
+          <!-- Sophia -$100 -->
+          <div class="tx-row">
+            <div class="tx-who">
+              <div class="tx-icon">
+                <img src="https://www.figma.com/api/mcp/asset/e2e077f2-f333-41f2-9c55-35deaff98730" alt="mastercard" onerror="this.style.background='#E1E5F0'"/>
+              </div>
+              <div class="tx-info">
+                <div class="tx-name">Sophia Richardson</div>
+                <div class="tx-time">6:10 PM</div>
+              </div>
+            </div>
+            <div class="tx-amount negative"><span>-$100.00</span></div>
+            <div class="tx-desc"><p>Insufficient funds in the account</p></div>
+          </div>
+
+          <!-- Sophia -$1,300 (failed/red) -->
+          <div class="tx-row">
+            <div class="tx-who">
+              <div class="tx-icon">
+                <img src="https://www.figma.com/api/mcp/asset/e2e077f2-f333-41f2-9c55-35deaff98730" alt="mastercard" onerror="this.style.background='#E1E5F0'"/>
+              </div>
+              <div class="tx-info">
+                <div class="tx-name">Sophia Richardson</div>
+                <div class="tx-time">5:25 PM</div>
+              </div>
+            </div>
+            <div class="tx-amount failed">
+              <svg viewBox="0 0 14 14" fill="none">
+                <circle cx="7" cy="7" r="6" stroke="#FF463B" stroke-width="1.3"/>
+                <path d="M7 4v4" stroke="#FF463B" stroke-width="1.3" stroke-linecap="round"/>
+                <circle cx="7" cy="10" r=".6" fill="#FF463B"/>
+              </svg>
+              <span>-$1,300.00</span>
+            </div>
+            <div class="tx-desc"><p>Insufficient funds in the account</p></div>
+          </div>
+
+          <!-- Joana Smith -$20 -->
+          <div class="tx-row">
+            <div class="tx-who">
+              <div class="tx-icon">
+                <img src="https://www.figma.com/api/mcp/asset/302c7a3d-0fea-43e6-821c-585f3871e4d3" alt="wise" onerror="this.style.background='#E1E5F0'"/>
+              </div>
+              <div class="tx-info">
+                <div class="tx-name">Joana Smith</div>
+                <div class="tx-time">4:00 PM</div>
+              </div>
+            </div>
+            <div class="tx-amount negative"><span>-$20.00</span></div>
+            <div class="tx-desc"><p>pomodo****@air.io</p></div>
+          </div>
+
+          <div class="tx-date">27 May</div>
+
+          <!-- Konstantin +$100,459 -->
+          <div class="tx-row">
+            <div class="tx-who">
+              <div class="tx-icon">
+                <img src="https://www.figma.com/api/mcp/asset/2540f17c-8de4-461a-b95d-b900e3818281" alt="visa" onerror="this.style.background='#E1E5F0'"/>
+              </div>
+              <div class="tx-info">
+                <div class="tx-name">Konstantin Konstantinopolskivskiy</div>
+                <div class="tx-time">8:40 PM</div>
+              </div>
+            </div>
+            <div class="tx-amount positive"><span>+$100,459.33</span></div>
+            <div class="tx-desc"><p>superkos****@air.io - VISA</p></div>
+          </div>
+
+          <!-- James Mitchell -$100 -->
+          <div class="tx-row">
+            <div class="tx-who">
+              <div class="tx-icon">
+                <img src="https://www.figma.com/api/mcp/asset/a4eae781-9bfc-4009-ab97-a484744181d5" alt="paypal" onerror="this.style.background='#E1E5F0'"/>
+              </div>
+              <div class="tx-info">
+                <div class="tx-name">James Mitchelll</div>
+                <div class="tx-time">9:05 PM</div>
+              </div>
+            </div>
+            <div class="tx-amount negative"><span>-$100.00</span></div>
+            <div class="tx-desc"><p>pomodo****@air.io</p></div>
+          </div>
+
+          <!-- Sophia -$200 -->
+          <div class="tx-row">
+            <div class="tx-who">
+              <div class="tx-icon">
+                <img src="https://www.figma.com/api/mcp/asset/e2e077f2-f333-41f2-9c55-35deaff98730" alt="mastercard" onerror="this.style.background='#E1E5F0'"/>
+              </div>
+              <div class="tx-info">
+                <div class="tx-name">Sophia Richardson</div>
+                <div class="tx-time">7:55 PM</div>
+              </div>
+            </div>
+            <div class="tx-amount negative"><span>-$200.00</span></div>
+            <div class="tx-desc"><p>Transfer to bank card 2983 **** 1663</p></div>
+          </div>
+
+        </div><!-- /tx-list -->
+      </div><!-- /payments-right -->
+
+      <!-- scroll indicator -->
+      <div class="payments-scrollbar"></div>
+
+    </div><!-- /payments-panel -->
+  </main>
+</div>
+
+</body>
+</html>
