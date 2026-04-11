@@ -1,0 +1,554 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>MilX — Home</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link href="https://fonts.googleapis.com/css2?family=Mulish:wght@400;600;700;800;900;1000&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Inter',sans-serif;background:#fff;color:#32353D;min-height:100vh;-webkit-font-smoothing:antialiased;}
+
+/* ── TOKENS ── */
+:root{
+  --black-600:#141414;
+  --black-500:#32353D;
+  --black-400:#71778A;
+  --black-300:#979EB8;
+  --black-200:#CFD4E5;
+  --black-100:#E1E5F0;
+  --black-90:#EBEDF5;
+  --black-80:#F0F2F8;
+  --black-60:#F3F3F7;
+  --black-50:#F5F6FA;
+  --black-30:#FCFCFD;
+  --black-0:#FFFFFF;
+  --green-400:#B2F86C;
+  --green-100:#03AD47;
+  --orange-400:#FF8411;
+  --red-375:#FF463B;
+  --r-xl:24px;
+  --r-lg:16px;
+  --r-md:12px;
+  --r-huge:32px;
+}
+
+/* ── HEADER ── */
+.header{
+  position:fixed;top:0;left:0;right:0;z-index:100;
+  height:70px;background:#fff;
+  border-bottom:1px solid var(--black-90);
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 24px;
+}
+.header-logo{
+  display:flex;align-items:center;gap:24px;
+  background:#fff;border:1px solid var(--black-100);
+  border-radius:12px;padding:12px 16px;width:240px;
+}
+.header-logo img.milx-logo{height:22px;}
+.header-logo-arrow{width:24px;height:18px;opacity:.5;}
+
+.header-right{display:flex;align-items:center;gap:16px;}
+.header-icons{display:flex;gap:0;padding-right:24px;}
+.icon-btn{padding:10px;border-radius:70px;cursor:pointer;display:flex;align-items:center;justify-content:center;}
+.icon-btn svg{width:20px;height:20px;color:var(--black-500);}
+.wallet-widget{
+  background:var(--black-30);border:1px solid var(--black-90);
+  border-radius:var(--r-md);padding:10px 16px 6px;
+  display:flex;flex-direction:column;
+}
+.wallet-label{font-size:10px;font-weight:600;color:var(--black-400);text-transform:uppercase;letter-spacing:.8px;line-height:1;}
+.wallet-amount{font-size:14px;font-weight:600;color:var(--black-500);line-height:24px;}
+.avatar{width:40px;height:40px;border-radius:50%;overflow:hidden;flex-shrink:0;}
+.avatar img{width:100%;height:100%;object-fit:cover;}
+
+/* ── LAYOUT ── */
+.layout{display:flex;margin-top:70px;min-height:calc(100vh - 70px);}
+
+/* ── SIDEBAR MENU ── */
+.sidebar{
+  position:fixed;top:70px;left:0;bottom:0;
+  width:264px;padding:24px;
+  display:flex;flex-direction:column;justify-content:space-between;
+  overflow-y:auto;
+}
+.menu-box{
+  background:#fff;border:1px solid var(--black-90);
+  border-radius:var(--r-xl);padding:8px;
+  display:flex;flex-direction:column;justify-content:space-between;
+  height:698px;
+}
+.menu-list{display:flex;flex-direction:column;gap:8px;}
+.menu-item{
+  display:flex;align-items:center;gap:12px;
+  padding:12px 16px;border-radius:var(--r-lg);
+  font-size:12px;font-weight:500;color:var(--black-500);
+  cursor:pointer;transition:background .15s;
+  background:#fff;
+}
+.menu-item:hover{background:var(--black-60);}
+.menu-item.active{background:var(--black-60);}
+.menu-item svg,.menu-item img{width:18px;height:18px;flex-shrink:0;}
+
+.menu-bottom{display:flex;flex-direction:column;gap:8px;}
+.donate-banner{padding:24px 16px 16px;display:flex;flex-direction:column;gap:16px;}
+.donate-header{display:flex;gap:12px;align-items:flex-start;}
+.donate-emblem{width:32px;height:32px;flex-shrink:0;}
+.donate-title{font-size:12px;font-weight:600;color:var(--black-500);line-height:16px;}
+.donate-desc{font-size:10px;color:var(--black-400);line-height:14px;}
+.donate-btn{
+  display:inline-flex;align-items:center;justify-content:center;
+  border:1px solid var(--black-100);border-radius:50px;
+  padding:8px 16px;cursor:pointer;
+  font-family:'Gilroy',sans-serif;font-size:11px;font-weight:700;
+  color:var(--black-500);letter-spacing:.44px;text-transform:uppercase;
+  background:#fff;
+}
+.menu-version{
+  display:flex;justify-content:space-between;align-items:center;
+  padding:12px 16px;font-size:12px;
+}
+.menu-version span:first-child{color:var(--black-400);}
+.menu-version span:last-child{color:var(--black-500);}
+
+/* ── MAIN CONTENT ── */
+.main{margin-left:264px;flex:1;padding:24px 24px 24px 0;min-width:0;}
+
+/* ── BALANCE BLOCK ── */
+.balance-block{
+  background:var(--black-60);
+  border-radius:var(--r-xl);
+  display:flex;gap:8px;
+  padding:8px;
+  margin-bottom:8px;
+}
+
+.balance-left{
+  background:#fff;
+  border-radius:var(--r-lg);
+  flex:1;
+  padding:20px 24px 24px;
+  position:relative;
+  display:flex;flex-direction:column;gap:4px;
+}
+
+.balance-label{
+  font-size:14px;font-weight:400;color:var(--black-500);line-height:24px;
+}
+
+.balance-amount{
+  font-family:'Mulish',sans-serif;font-weight:900;
+  font-size:48px;line-height:64px;color:var(--black-600);
+  white-space:nowrap;
+}
+
+.balance-actions{display:flex;gap:12px;margin-top:28px;}
+
+.btn-send{
+  background:var(--black-600);color:#fff;
+  border:none;border-radius:var(--r-huge);
+  padding:10px 20px;width:141px;
+  font-family:'Inter',sans-serif;font-size:12px;font-weight:700;
+  text-transform:uppercase;letter-spacing:.48px;line-height:20px;
+  cursor:pointer;
+}
+.btn-receive{
+  background:var(--green-400);color:var(--black-500);
+  border:none;border-radius:var(--r-huge);
+  padding:10px 20px;width:141px;
+  font-family:'Inter',sans-serif;font-size:12px;font-weight:700;
+  text-transform:uppercase;letter-spacing:.48px;line-height:20px;
+  cursor:pointer;
+}
+
+.balance-arrow{
+  position:absolute;top:20px;right:20px;
+  background:var(--black-60);border-radius:50px;
+  padding:6px;display:flex;align-items:center;justify-content:center;
+  cursor:pointer;
+}
+.balance-arrow svg{width:20px;height:20px;color:var(--black-500);}
+
+/* ── ACTIVE FUNDS WIDGET ── */
+.active-funds-widget{
+  background:var(--black-30);
+  border:1px solid #fff;
+  border-radius:var(--r-lg);
+  width:300px;flex-shrink:0;
+  padding:24px;
+  display:flex;flex-direction:column;justify-content:space-between;
+  min-height:216px;
+  position:relative;
+  align-self:stretch;
+}
+
+.active-funds-details{
+  position:absolute;top:11.5px;right:7px;
+  font-family:'Gilroy',sans-serif;font-size:12px;font-weight:700;
+  text-transform:uppercase;letter-spacing:.48px;
+  color:var(--black-600);line-height:16px;
+  padding:8px 16px;cursor:pointer;
+}
+
+.balance-circle{width:88px;height:88px;}
+.balance-circle img{width:100%;height:100%;}
+
+.active-funds-title{
+  font-family:'Mulish',sans-serif;font-weight:1000;
+  font-size:18px;line-height:24px;
+  text-transform:uppercase;color:var(--black-600);
+}
+.active-funds-sub{
+  font-size:14px;font-weight:400;color:var(--black-500);line-height:24px;
+}
+
+/* ── LAST PAYMENTS TABLE ── */
+.last-payments-block{
+  background:var(--black-60);
+  border-radius:var(--r-xl);
+  padding:8px;
+  padding-top:20px;
+}
+
+.section-title{
+  font-family:'Mulish',sans-serif;font-weight:1000;
+  font-size:18px;line-height:24px;
+  text-transform:uppercase;color:var(--black-500);
+  padding:0 16px 8px;
+}
+
+.tx-list{display:flex;flex-direction:column;gap:6px;}
+
+.tx-date-label{
+  font-size:10px;font-weight:400;color:var(--black-400);
+  text-transform:uppercase;line-height:16px;
+  padding:8px 16px 2px;
+}
+
+.tx-row{
+  background:var(--black-30);border:1px solid #fff;
+  border-radius:var(--r-lg);
+  display:flex;align-items:flex-start;gap:24px;
+  padding:12px 16px;height:64px;flex-shrink:0;
+}
+
+.tx-who{display:flex;gap:12px;align-items:flex-start;width:190px;flex-shrink:0;}
+.tx-icon-wrap{display:flex;align-items:center;padding:2px 0;flex-shrink:0;}
+.tx-icon{width:20px;height:20px;object-fit:contain;}
+.tx-name-block{display:flex;flex-direction:column;width:160px;}
+.tx-name{
+  font-size:14px;font-weight:500;color:var(--black-500);
+  line-height:24px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+}
+.tx-time{font-size:10px;color:var(--black-400);line-height:16px;}
+
+.tx-amount-wrap{
+  display:flex;align-items:center;justify-content:flex-end;gap:6px;
+  flex:1;max-width:120px;
+}
+.tx-amount{font-size:14px;font-weight:500;line-height:24px;white-space:nowrap;text-align:right;}
+.tx-amount.positive{color:var(--green-100);}
+.tx-amount.negative{color:var(--black-500);}
+.tx-amount.pending{color:var(--orange-400);}
+.tx-amount.failed{color:var(--red-375);}
+
+.tx-status-icon{width:14px;height:14px;flex-shrink:0;}
+
+.tx-desc{
+  flex:1;display:flex;flex-direction:column;justify-content:center;padding:5px 0;
+}
+.tx-desc-text{
+  font-size:12px;color:var(--black-400);line-height:16px;
+  overflow:hidden;text-overflow:ellipsis;white-space:nowrap;
+  height:32px;display:flex;align-items:center;
+}
+
+/* ── LOAD MORE ── */
+.load-more-wrap{
+  display:flex;justify-content:center;
+  padding:16px;
+}
+.load-more-btn{
+  border:1px solid var(--black-200);border-radius:var(--r-huge);
+  padding:10px 20px;width:141px;
+  background:transparent;cursor:pointer;
+  font-family:'Inter',sans-serif;font-size:12px;font-weight:700;
+  text-transform:uppercase;letter-spacing:.48px;color:var(--black-500);
+  line-height:20px;
+}
+</style>
+</head>
+<body>
+
+<!-- ── HEADER ── -->
+<header class="header">
+  <div class="header-logo">
+    <!-- MilX logo SVG -->
+    <svg class="milx-logo" width="80" height="22" viewBox="0 0 80 22" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <text x="0" y="18" font-family="Mulish,sans-serif" font-weight="900" font-size="20" fill="#141414">milX</text>
+    </svg>
+    <!-- Arrow up/down -->
+    <svg class="header-logo-arrow" width="24" height="18" viewBox="0 0 24 18" fill="none">
+      <path d="M7 5l5-4 5 4M7 13l5 4 5-4" stroke="#32353D" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+    </svg>
+  </div>
+  <div class="header-right">
+    <div class="header-icons">
+      <button class="icon-btn">
+        <!-- Bell -->
+        <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5">
+          <path d="M10 2a6 6 0 00-6 6v3l-1.5 2.5h15L16 11V8a6 6 0 00-6-6zm0 0v-1m0 17a2 2 0 01-2-2h4a2 2 0 01-2 2z"/>
+        </svg>
+      </button>
+      <button class="icon-btn">
+        <!-- Chat -->
+        <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5">
+          <path d="M2 4a2 2 0 012-2h12a2 2 0 012 2v9a2 2 0 01-2 2H6l-4 3V4z"/>
+        </svg>
+      </button>
+    </div>
+    <div class="wallet-widget">
+      <span class="wallet-label">My Funds</span>
+      <span class="wallet-amount">$36,819.12</span>
+    </div>
+    <div class="avatar">
+      <img src="https://www.figma.com/api/mcp/asset/c9d22ff5-26b5-4028-b7ce-cb63b9934199" alt="avatar"/>
+    </div>
+  </div>
+</header>
+
+<div class="layout">
+
+  <!-- ── SIDEBAR ── -->
+  <aside class="sidebar">
+    <div class="menu-box">
+      <nav class="menu-list">
+        <!-- Home — active -->
+        <a href="home.html" class="menu-item active" style="text-decoration:none;">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+            <path d="M3 9.5L12 3l9 6.5V20a1 1 0 01-1 1H4a1 1 0 01-1-1V9.5z"/>
+            <path d="M9 21V12h6v9"/>
+          </svg>
+          Home
+        </a>
+        <!-- Active Funds -->
+        <a href="#" class="menu-item" style="text-decoration:none;">
+          <img src="https://www.figma.com/api/mcp/asset/070da4a5-277e-4d0f-a0f5-2a3e43d86f18" alt="Active Funds"/>
+          Active Funds
+        </a>
+        <!-- Advanced Funds -->
+        <a href="#" class="menu-item" style="text-decoration:none;">
+          <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+            <rect width="18" height="18" rx="5.131" fill="#32353D"/>
+            <path d="M5 9h3M10 6v6" stroke="#fff" stroke-width="1.5" stroke-linecap="round"/>
+          </svg>
+          Advanced Funds
+        </a>
+        <!-- Payments -->
+        <a href="index.html" class="menu-item" style="text-decoration:none;">
+          <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+            <rect width="18" height="18" rx="5.131" fill="#32353D"/>
+            <path d="M5 7h8M5 11h5" stroke="#fff" stroke-width="1.5" stroke-linecap="round"/>
+          </svg>
+          Payments
+        </a>
+      </nav>
+
+      <div class="menu-bottom">
+        <div class="donate-banner">
+          <div class="donate-header">
+            <img class="donate-emblem" src="https://www.figma.com/api/mcp/asset/b2c4ea4d-16a6-4166-aac2-c899de5a4554" alt="emblem"/>
+            <div>
+              <div class="donate-title">Stop the WAR!<br>Support Ukraine 🇺🇦</div>
+            </div>
+          </div>
+          <div class="donate-desc">You can send funds for humanitarian aid to Ukrainians who have suffered from the war</div>
+          <button class="donate-btn">DONATE</button>
+        </div>
+        <div class="menu-version">
+          <span>Version 1.6.12</span>
+          <span>English</span>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <!-- ── MAIN ── -->
+  <main class="main">
+
+    <!-- ── BALANCE BLOCK ── -->
+    <div class="balance-block">
+
+      <!-- Left: Available Funds -->
+      <div class="balance-left">
+        <span class="balance-label">Available Funds</span>
+        <div>
+          <div class="balance-amount">$36,819.12</div>
+          <div class="balance-actions">
+            <button class="btn-send">Send</button>
+            <button class="btn-receive">Receive</button>
+          </div>
+        </div>
+        <button class="balance-arrow">
+          <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5">
+            <path d="M6 8l4 4 4-4" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </button>
+      </div>
+
+      <!-- Right: Active Funds widget -->
+      <div class="active-funds-widget">
+        <span class="active-funds-details">DETAILS</span>
+        <div class="balance-circle">
+          <img src="https://www.figma.com/api/mcp/asset/28c76339-6ecb-4ba9-9a90-05ebeb9690ed" alt="balance circle"/>
+        </div>
+        <div>
+          <div class="active-funds-title">Active Funds</div>
+          <div class="active-funds-sub">Use the funds right now!</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── LAST PAYMENTS TABLE ── -->
+    <div class="last-payments-block">
+      <div class="section-title">Last payments</div>
+
+      <div class="tx-list">
+
+        <!-- TODAY -->
+        <div class="tx-date-label">TODAY</div>
+
+        <!-- Transaction 1: Sophia Richardson - pending -->
+        <div class="tx-row">
+          <div class="tx-who">
+            <div class="tx-icon-wrap">
+              <img class="tx-icon" src="https://www.figma.com/api/mcp/asset/9d9c5238-02cc-46eb-bcb9-baf71c10f041" alt="mastercard"/>
+            </div>
+            <div class="tx-name-block">
+              <span class="tx-name">Sophia Richardson</span>
+              <span class="tx-time">1:45 PM</span>
+            </div>
+          </div>
+          <div class="tx-amount-wrap">
+            <img class="tx-status-icon" src="https://www.figma.com/api/mcp/asset/172723ba-f17e-4d68-9b28-40ae714b4fca" alt="pending"/>
+            <span class="tx-amount pending">-$100.00</span>
+          </div>
+          <div class="tx-desc">
+            <span class="tx-desc-text">Transfer to bank card 2983 **** 1663</span>
+          </div>
+        </div>
+
+        <!-- Transaction 2: YouTube Reports - positive -->
+        <div class="tx-row">
+          <div class="tx-who">
+            <div class="tx-icon-wrap">
+              <img class="tx-icon" src="https://www.figma.com/api/mcp/asset/e191ea47-1d2d-4348-9626-eb402949c786" alt="youtube"/>
+            </div>
+            <div class="tx-name-block">
+              <span class="tx-name">YouTube Reports</span>
+              <span class="tx-time">2:30 PM</span>
+            </div>
+          </div>
+          <div class="tx-amount-wrap">
+            <span class="tx-amount positive">+$32,115.00</span>
+          </div>
+          <div class="tx-desc">
+            <span class="tx-desc-text">YouTube revenues for July 2025</span>
+          </div>
+        </div>
+
+        <!-- Transaction 3: Emily Carter - neutral -->
+        <div class="tx-row">
+          <div class="tx-who">
+            <div class="tx-icon-wrap">
+              <img class="tx-icon" src="https://www.figma.com/api/mcp/asset/6aa537fe-0ee8-4368-8a81-bc38fb464114" alt="p2p"/>
+            </div>
+            <div class="tx-name-block">
+              <span class="tx-name">Emily Carter</span>
+              <span class="tx-time">3:15 PM</span>
+            </div>
+          </div>
+          <div class="tx-amount-wrap">
+            <span class="tx-amount negative">-$100.00</span>
+          </div>
+          <div class="tx-desc">
+            <span class="tx-desc-text">Transfer via P2P to MilX user</span>
+          </div>
+        </div>
+
+        <!-- YESTERDAY -->
+        <div class="tx-date-label">YESTERDAY</div>
+
+        <!-- Transaction 4: Sophia Richardson - failed -->
+        <div class="tx-row">
+          <div class="tx-who">
+            <div class="tx-icon-wrap">
+              <img class="tx-icon" src="https://www.figma.com/api/mcp/asset/9d9c5238-02cc-46eb-bcb9-baf71c10f041" alt="mastercard"/>
+            </div>
+            <div class="tx-name-block">
+              <span class="tx-name">Sophia Richardson</span>
+              <span class="tx-time">6:10 PM</span>
+            </div>
+          </div>
+          <div class="tx-amount-wrap">
+            <img class="tx-status-icon" src="https://www.figma.com/api/mcp/asset/99eb11f8-8961-40e6-be88-3afed5f0680d" alt="failed"/>
+            <span class="tx-amount failed">-$1,300.00</span>
+          </div>
+          <div class="tx-desc">
+            <span class="tx-desc-text">Insufficient funds in the account</span>
+          </div>
+        </div>
+
+        <!-- Transaction 5: Emily Carter - positive -->
+        <div class="tx-row">
+          <div class="tx-who">
+            <div class="tx-icon-wrap">
+              <img class="tx-icon" src="https://www.figma.com/api/mcp/asset/6aa537fe-0ee8-4368-8a81-bc38fb464114" alt="p2p"/>
+            </div>
+            <div class="tx-name-block">
+              <span class="tx-name">Emily Carter</span>
+              <span class="tx-time">5:25 PM</span>
+            </div>
+          </div>
+          <div class="tx-amount-wrap">
+            <span class="tx-amount positive">+$20.00</span>
+          </div>
+          <div class="tx-desc">
+            <span class="tx-desc-text">P2P transfer from MilX user</span>
+          </div>
+        </div>
+
+        <!-- Transaction 6: Konstantin - positive -->
+        <div class="tx-row">
+          <div class="tx-who">
+            <div class="tx-icon-wrap">
+              <img class="tx-icon" src="https://www.figma.com/api/mcp/asset/6bff3901-6d6c-462e-b1c0-78fde3737ca8" alt="visa"/>
+            </div>
+            <div class="tx-name-block">
+              <span class="tx-name">Konstantin Konstantinopolskivskiy</span>
+              <span class="tx-time">4:00 PM</span>
+            </div>
+          </div>
+          <div class="tx-amount-wrap">
+            <span class="tx-amount positive">+$100,459.33</span>
+          </div>
+          <div class="tx-desc">
+            <span class="tx-desc-text">superkos****@air.io - VISA</span>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Load More -->
+      <div class="load-more-wrap">
+        <button class="load-more-btn">Load more</button>
+      </div>
+    </div>
+
+  </main>
+</div>
+
+</body>
+</html>
