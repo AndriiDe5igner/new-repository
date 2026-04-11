@@ -114,7 +114,7 @@ body{font-family:'Inter',sans-serif;background:#fff;color:#32353D;min-height:100
 .menu-version span:last-child{color:var(--black-500);}
 
 /* ── MAIN CONTENT ── */
-.main{margin-left:264px;flex:1;padding:24px 24px 24px 0;min-width:0;}
+.main{margin-left:264px;flex:1;padding:24px 24px 24px 0;min-width:0;max-width:841px;}
 
 /* ── BALANCE BLOCK ── */
 .balance-block{
@@ -167,9 +167,28 @@ body{font-family:'Inter',sans-serif;background:#fff;color:#32353D;min-height:100
   position:absolute;top:20px;right:20px;
   background:var(--black-60);border-radius:50px;
   padding:6px;display:flex;align-items:center;justify-content:center;
-  cursor:pointer;
+  cursor:pointer;border:none;
 }
-.balance-arrow svg{width:20px;height:20px;color:var(--black-500);}
+.balance-arrow svg{width:20px;height:20px;color:var(--black-500);transition:transform .25s;}
+.balance-left.is-open .balance-arrow svg{transform:rotate(180deg);}
+
+/* ── BALANCE DETAILS (expanded) ── */
+.balance-details{
+  display:none;
+  grid-template-columns:1fr 1fr;
+  gap:16px 24px;
+  margin-top:20px;
+  padding-top:20px;
+  border-top:1px solid var(--black-90);
+}
+.balance-left.is-open .balance-details{display:grid;}
+
+.fund-item{}
+.fund-amount-row{display:flex;align-items:center;gap:6px;margin-bottom:2px;}
+.fund-dot{width:8px;height:8px;border-radius:50%;flex-shrink:0;}
+.fund-amount{font-size:14px;font-weight:600;color:var(--black-600);}
+.fund-name{font-size:14px;font-weight:600;color:var(--black-500);margin-bottom:2px;}
+.fund-desc{font-size:11px;color:var(--black-400);line-height:15px;}
 
 /* ── ACTIVE FUNDS WIDGET ── */
 .active-funds-widget{
@@ -391,11 +410,47 @@ body{font-family:'Inter',sans-serif;background:#fff;color:#32353D;min-height:100
             <button class="btn-receive">Receive</button>
           </div>
         </div>
-        <button class="balance-arrow">
+        <button class="balance-arrow" onclick="this.closest('.balance-left').classList.toggle('is-open')">
           <svg viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5">
             <path d="M6 8l4 4 4-4" stroke-linecap="round" stroke-linejoin="round"/>
           </svg>
         </button>
+
+        <!-- Expanded fund details -->
+        <div class="balance-details">
+          <div class="fund-item">
+            <div class="fund-amount-row">
+              <span class="fund-dot" style="background:#03C4A1;"></span>
+              <span class="fund-amount">$0.00</span>
+            </div>
+            <div class="fund-name">Approved Funds</div>
+            <div class="fund-desc">This is your confirmed revenue from YouTube and other sources, based on official platform reports.</div>
+          </div>
+          <div class="fund-item">
+            <div class="fund-amount-row">
+              <span class="fund-dot" style="background:#03AD47;"></span>
+              <span class="fund-amount">$0.00</span>
+            </div>
+            <div class="fund-name">Advance Funds</div>
+            <div class="fund-desc">Withdraw income in advance before YouTube pays you. Yes, you can get it now!</div>
+          </div>
+          <div class="fund-item">
+            <div class="fund-amount-row">
+              <span class="fund-dot" style="background:#FF8411;"></span>
+              <span class="fund-amount">$0.00</span>
+            </div>
+            <div class="fund-name">Active Funds</div>
+            <div class="fund-desc">This is our investment to help you develop your content creation business and generate even more revenue.</div>
+          </div>
+          <div class="fund-item">
+            <div class="fund-amount-row">
+              <span class="fund-dot" style="background:#9747FF;"></span>
+              <span class="fund-amount">$0.00</span>
+            </div>
+            <div class="fund-name">Royalty Funds</div>
+            <div class="fund-desc">Get upfront capital from content licensing and earn more from fellow creators' royalties on Royalty platform.</div>
+          </div>
+        </div>
       </div>
 
       <!-- Right: Active Funds widget -->
